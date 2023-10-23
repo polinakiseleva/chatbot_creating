@@ -1,5 +1,4 @@
 import os
-
 import openai
 from langchain.memory import ConversationSummaryMemory
 from langchain.document_loaders import WebBaseLoader
@@ -16,7 +15,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 chat = ChatOpenAI()
 
-loader = WebBaseLoader("https://rosexperts.ru/")  # загрузка данных с сайта
+loader = WebBaseLoader(["https://rosexperts.ru/", "https://rosexperts.ru/o-kompanii/"])  # загрузка данных с сайта
 data = loader.load()
 
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
