@@ -37,15 +37,21 @@ qa = ConversationalRetrievalChain.from_llm(llm=chat, retriever=retriever, memory
 
 @bot.message_handler(commands=['start'])  # указываем, какие команды отслеживаем
 def start(message):
-    bot.send_message(message.chat.id, "Привет! Чем могу помочь?")
+    bot.send_message(message.chat.id, "Выберите нужный блок в меню")
+
+
+@bot.message_handler(commands=['question'])  # указываем, какие команды отслеживаем
+def question(message):
+    bot.send_message(message.chat.id, "Напишите вопрос в строке ввода")
 
 
 @bot.message_handler(commands=['aboutcompany'])
 def description(message):
-    bot.send_message(message.chat.id, "Центр сертификации Росэксперт выполняет сертификацию продуктов и услуг с 2012 "
-                                      "года. За это время оформили 28 000 документов для компаний России, Беларуси, "
-                                      "Казахстана. Подтверждаем качество и безопасность различной продукции: булочек, "
-                                      "игрушек, гидроциклонов.")
+    bot.send_message(message.chat.id, "Работая с 2012 года, команда центра сертификации «Росэксперт» подготовила "
+                                      "более 28 000 документов для компаний из России, Беларуси, Казахстана и "
+                                      "других стран\n\nКаждый день мы решаем нестандартные задачи, гарантируя "
+                                      "качественное выполнение заказов любого объема. Показательный кейс – "
+                                      "сертификация российского издания книги «Гарри Поттер и философский камень»")
 
 
 @bot.message_handler(commands=['contacts'])
@@ -78,8 +84,9 @@ def get_text_messages(message):
         markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
         item1 = telebot.types.KeyboardButton('Москва')
         item2 = telebot.types.KeyboardButton('Калининград')
+        back = telebot.types.KeyboardButton('Назад')
 
-        markup.add(item1, item2)
+        markup.add(item1, item2, back)
         bot.send_message(message.chat.id, 'Выберите город', reply_markup=markup)
 
     elif message.text == 'Москва':
@@ -92,9 +99,21 @@ def get_text_messages(message):
                  'График работы: понедельник-пятница 09:00-18:00'
         bot.send_message(message.chat.id, answer)
 
+    elif message.text == 'Назад':
+        markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+        item1 = telebot.types.KeyboardButton('WhatsApp')
+        item2 = telebot.types.KeyboardButton('Телефон')
+        item3 = telebot.types.KeyboardButton('Почта')
+        item4 = telebot.types.KeyboardButton('Адрес')
+
+        markup.add(item1, item2, item3, item4)
+        bot.send_message(message.chat.id, 'Выберите удобный способ связи из предложенных вариантов',
+                         reply_markup=markup)
+
+
     else:
         answer = qa(message.text)
-        answer = answer['answer']
+        answer = answer['answer'] + '\n\nЕсли у вас остался вопрос, напишите его'
         bot.send_message(message.chat.id, answer)  # ответ бота
 
 
