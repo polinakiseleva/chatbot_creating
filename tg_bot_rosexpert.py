@@ -18,7 +18,8 @@ bot = telebot.TeleBot(os.getenv("TG_KEY"))
 
 chat = ChatOpenAI()
 
-loader = WebBaseLoader("https://rosexperts.ru/")  # загрузка данных с сайта
+loader = WebBaseLoader(
+    ["https://rosexperts.ru/", "https://rosexperts.ru/poleznoe/voprosy-i-otvety/"])  # загрузка данных с сайта
 data = loader.load()
 
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
@@ -111,7 +112,7 @@ def get_text_messages(message):
                          reply_markup=markup)
 
     else:
-        msg = bot.send_message(message.chat.id, '*Ищем ответ на ваш вопрос. Скоро вернемся*', parse_mode= 'Markdown')
+        msg = bot.send_message(message.chat.id, '*Ищем ответ на ваш вопрос. Скоро вернемся*', parse_mode='Markdown')
         answer = qa(message.text)
         answer = answer['answer'] + '\n\nЕсли у вас есть другой вопрос, пожалуйста, напишите его'
         bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id, text=answer)
