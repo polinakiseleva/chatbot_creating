@@ -110,11 +110,11 @@ def get_text_messages(message):
         bot.send_message(message.chat.id, 'Выберите удобный способ связи из предложенных вариантов',
                          reply_markup=markup)
 
-
     else:
+        msg = bot.send_message(message.chat.id, '*Ищем ответ на ваш вопрос. Скоро вернемся*', parse_mode= 'Markdown')
         answer = qa(message.text)
-        answer = answer['answer'] + '\n\nЕсли у вас остался вопрос, напишите его'
-        bot.send_message(message.chat.id, answer)  # ответ бота
+        answer = answer['answer'] + '\n\nЕсли у вас есть другой вопрос, пожалуйста, напишите его'
+        bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id, text=answer)
 
 
 # чтобы бот не останавливался
